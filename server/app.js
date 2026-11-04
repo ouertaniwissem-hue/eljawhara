@@ -93,12 +93,20 @@ function serveStatic(req, res, pathname, adminEnabled) {
   const allowed = (publicRootFiles.has(file) || publicDirs.some(dir => file.startsWith(dir))) && (adminEnabled || !adminPanelFiles.has(file));
   const full = path.resolve(root, file);
   if (!allowed || file.includes('..') || !full.startsWith(root + path.sep)) return send(res, 404, 'Not found', { 'Content-Type': 'text/plain' });
+  fs.stat(full, (statErr, stat) => {
+    if (statErr || !stat.isFile()) return send(res, 404, 'Not found', { 'Content-Type': 'text/plain' });
+    // Images are revalidated so edited photos show up immediately; unchanged ones answer 304.
+    const etag = `"${stat.size.toString(16)}-${Math.floor(stat.mtimeMs).toString(16)}"`;
+    const ext = path.extname(full).toLowerCase();
+    if (req.headers['if-none-match'] === etag) {
+      res.writeHead(304, { ETag: etag, 'Cache-Control': 'no-cache' });
+      return res.end();
+    }
   fs.readFile(full, (err, data) => {
     if (err) return send(res, 404, 'Not found', { 'Content-Type': 'text/plain' });
-    const ext = path.extname(full).toLowerCase();
-    const cache = file.startsWith('assets/products/') || file.startsWith('assets/hero/') || file === 'assets/logo.png' ? 'public, max-age=86400' : 'no-cache';
-    res.writeHead(200, { 'Content-Type': types[ext] || 'application/octet-stream', 'Cache-Control': cache });
+    res.writeHead(200, { 'Content-Type': types[ext] || 'application/octet-stream', 'Cache-Control': 'no-cache', ETag: etag });
     res.end(req.method === 'HEAD' ? undefined : data);
+  });
   });
 }
 
