@@ -161,23 +161,30 @@ function productPhoto(product, image = product.image, decorative = false, eager 
   return `<img class="product-photo" src="${image}" alt="${decorative ? '' : escapeHTML(`${product.brand} — ${pick(product.name)}`)}" width="540" height="1000" loading="${eager ? 'eager' : 'lazy'}" decoding="async">`;
 }
 function renderFilters() {
-  byId('filters').innerHTML = ['all', ...Object.keys(categoryLabels)].map(key => `<button class="filter ${category === key ? 'active' : ''}" data-category="${key}" aria-pressed="${category === key}">${t(key)}<span class="filter-count">${formatNumber(key === 'all' ? products.length : products.filter(product => product.category === key).length)}</span></button>`).join('');
+  byId('filters').innerHTML = ['all', ...categoryOrder].map(key => `<button class="filter ${category === key ? 'active' : ''}" data-category="${key}" aria-pressed="${category === key}">${t(key)}<span class="filter-count">${formatNumber(catalogEntries().filter(entry => key === 'all' || entry.product.category === key).length)}</span></button>`).join('');
   byId('filters').setAttribute('aria-label', t('catalogLabel'));
 }
-function cardPhoto(product) {
-  const first = product.variants[0];
-  if (first.image || !product.image) return productPhoto(product, first.image, true);
-  const shown = product.variants.find(variant => variant.image === product.image);
-  return `${productPhoto(product, product.image, true)}<span class="photo-size-note">${t('photoOfSize').replace('{size}', formatSize(shown.size, shown.material))}</span>`;
+// One card per product and size: categories in shop order, then plastic before glass, then catalog order and volume.
+const categoryOrder = ['juice', 'syrup', 'aroma', 'colorant', 'water', 'vinegar'].filter(key => categoryLabels[key]).concat(Object.keys(categoryLabels).filter(key => !['juice', 'syrup', 'aroma', 'colorant', 'water', 'vinegar'].includes(key)));
+const materialOrder = ['plastique', 'verre'];
+const entryVolume = size => size === 'bottle' ? 0 : parseFloat(size) * (/\bL\b/.test(size) ? 1000 : 1);
+function catalogEntries() {
+  const rank = (list, value) => list.includes(value) ? list.indexOf(value) : list.length;
+  return products.flatMap((product, index) => product.variants.map(variant => ({ product, variant, index })))
+    .sort((a, b) => rank(categoryOrder, a.product.category) - rank(categoryOrder, b.product.category) || rank(materialOrder, a.variant.material) - rank(materialOrder, b.variant.material) || a.index - b.index || entryVolume(a.variant.size) - entryVolume(b.variant.size));
 }
 function renderProducts() {
   const query = byId('search').value.toLocaleLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
-  const filtered = products.filter(product => (category === 'all' || category === product.category) && `${product.name.fr} ${product.name.ar} ${product.brand} ${categoryLabels[product.category].fr} ${categoryLabels[product.category].ar} ${product.description.fr} ${product.description.ar} ${product.variants.flatMap(variant => variant.codes || []).join(' ')}`.toLocaleLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(query));
+  const filtered = catalogEntries().filter(({ product, variant }) => (category === 'all' || category === product.category) && `${product.name.fr} ${product.name.ar} ${product.brand} ${categoryLabels[product.category].fr} ${categoryLabels[product.category].ar} ${product.description.fr} ${product.description.ar} ${(variant.codes || []).join(' ')} ${formatVariant(product, variant.size)}`.toLocaleLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(query));
   byId('results-count').textContent = `${formatNumber(filtered.length)} ${t('productCount')}`;
-  byId('product-grid').innerHTML = filtered.length ? filtered.slice(0, visibleLimit).map(product => `<article class="product-card" style="--tint:${product.tint}">
-    <button class="product-image-button" data-product="${product.id}" aria-label="${t('viewProduct')} : ${pick(categoryLabels[product.category])} — ${pick(product.name)}"><span class="product-badge">${product.brand}</span>${cardPhoto(product)}<span class="product-view-indicator" aria-hidden="true">↗</span></button>
-    <div class="product-info"><div class="product-meta"><span>${pick(categoryLabels[product.category])}</span><span class="product-volume">${product.sizes[0] === 'bottle' ? t('bottle') : formatVariant(product, product.sizes[0])}${product.sizes.length > 1 ? ' +' : ''}</span></div><button class="product-name" data-product="${product.id}">${pick(product.name)}</button><div class="product-bottom"><span class="price">${money(product.price)}${priceCaption(product.variants[0])}</span>${product.variants[0].inStock === false && product.price !== null ? `<button class="add-button" disabled>${t('outOfStock')}</button>` : `<button class="add-button" ${product.price === null ? 'data-product' : 'data-add'}="${product.id}" aria-label="${product.price === null ? t('viewProduct') : t('addToCart')} : ${pick(categoryLabels[product.category])} — ${pick(product.name)}">${product.price === null ? '' : icon('plus')}${t(product.price === null ? 'details' : 'add')}</button>`}</div></div>
-    </article>`).join('') : `<div class="empty-results">${t('noResults')}</div>`;
+  byId('product-grid').innerHTML = filtered.length ? filtered.slice(0, visibleLimit).map(({ product, variant }) => {
+    const key = escapeHTML(`${product.id}|${variant.size}`);
+    const label = `${pick(categoryLabels[product.category])} — ${pick(product.name)} · ${variant.size === 'bottle' ? t('bottle') : formatVariant(product, variant.size)}`;
+    return `<article class="product-card" style="--tint:${product.tint}">
+    <button class="product-image-button" data-variant="${key}" aria-label="${t('viewProduct')} : ${label}"><span class="product-badge">${product.brand}</span>${productPhoto(product, variant.image, true)}<span class="product-view-indicator" aria-hidden="true">↗</span></button>
+    <div class="product-info"><div class="product-meta"><span>${pick(categoryLabels[product.category])}</span></div><button class="product-name" data-variant="${key}">${pick(product.name)}</button><span class="product-size">${variant.size === 'bottle' ? t('bottle') : formatVariant(product, variant.size)}</span><div class="product-bottom"><span class="price">${money(variant.price)}${priceCaption(variant)}</span>${variant.inStock === false && variant.price !== null ? `<button class="add-button" disabled>${t('outOfStock')}</button>` : `<button class="add-button" ${variant.price === null ? 'data-variant' : 'data-add-variant'}="${key}" aria-label="${variant.price === null ? t('viewProduct') : t('addToCart')} : ${label}">${variant.price === null ? '' : icon('plus')}${t(variant.price === null ? 'details' : 'add')}</button>`}</div></div>
+    </article>`;
+  }).join('') : `<div class="empty-results">${t('noResults')}</div>`;
   let more = byId('catalog-more');
   if (!more) { more = document.createElement('div'); more.id = 'catalog-more'; byId('product-grid').after(more); }
   more.innerHTML = filtered.length > visibleLimit ? `<button class="button load-more" data-action="load-more">${t('loadMore')}<span>+ ${formatNumber(filtered.length - visibleLimit)}</span></button>` : '';
@@ -241,16 +248,16 @@ function addToCart(id, size = productById(id).sizes[0], quantity = 1) {
 function quantityControls(quantity, context, key = '', max = 99) {
   return `<div class="quantity-control"><button data-quantity="${context}" data-key="${key}" data-delta="-1" aria-label="${t('decrease')}" ${quantity <= 1 ? 'disabled' : ''}>−</button><span aria-live="polite">${formatNumber(quantity)}</span><button data-quantity="${context}" data-key="${key}" data-delta="1" aria-label="${t('increase')}" ${quantity >= max ? 'disabled' : ''}>+</button></div>`;
 }
-function showProduct(id) {
+function showProduct(id, size) {
   selectedProduct = productById(id);
-  selectedSize = selectedProduct.sizes[0]; selectedQuantity = 1; selectedPhoto = 0;
+  selectedSize = size && selectedProduct.sizes.includes(size) ? size : selectedProduct.sizes[0]; selectedQuantity = 1; selectedPhoto = 0;
   renderDetail(); openDialog('product-dialog');
 }
 function renderDetail() {
   const product = selectedProduct;
   const variant = variantFor(product, selectedSize);
   byId('product-dialog').setAttribute('aria-label', `${product.brand} — ${pick(categoryLabels[product.category])} — ${pick(product.name)}`);
-  byId('product-detail').innerHTML = `<div class="product-detail-layout"><div class="detail-art" style="--tint:${product.tint}">${productPhoto(product, variant.gallery[selectedPhoto] || variant.image, false, true)}${variant.gallery.length > 1 ? `<div class="detail-gallery" role="group" aria-label="${t('morePhotos')}">${variant.gallery.map((image, index) => `<button class="gallery-thumb ${index === selectedPhoto ? 'active' : ''}" data-photo="${index}" aria-pressed="${index === selectedPhoto}" aria-label="${t('morePhotos')} ${formatNumber(index + 1)}"><img src="${image}" alt="" width="540" height="1000"></button>`).join('')}</div>` : ''}</div><div class="detail-copy"><div class="eyebrow">${product.brand} · ${pick(categoryLabels[product.category])}</div><h2>${pick(product.name)}</h2><span class="label-caption">${t('labelCaption')}</span><p>${pick(product.description)}</p><span class="field-label">${t('size')}</span><div class="size-options" role="group" aria-label="${t('size')}">${product.sizes.map(size => `<button class="size-option ${selectedSize === size ? 'active' : ''}" data-size="${size}" aria-pressed="${selectedSize === size}">${formatVariant(product, size)}</button>`).join('')}</div><p class="stock-pending">${stockText(variant)}</p>${productCode(variant)}<div class="detail-purchase"><span class="price">${money(variant.price)}${priceCaption(variant)}</span>${variant.price !== null && variant.inStock !== false ? quantityControls(selectedQuantity, 'detail', '', maxQty(variant)) : ''}</div>${variant.price !== null && variant.inStock === false ? `<button class="button primary full-width" disabled>${t('outOfStock')}</button>` : `<button class="button primary full-width" data-action="${variant.price === null ? 'product-quote' : 'detail-add'}">${t(variant.price === null ? 'contact' : 'addToCart')}${icon('plus')}</button>`}${variant.references.length ? `<div class="retailer-reference"><strong>${t('retailerSource')}</strong><span>${t('checkedOn')}</span>${new Set(variant.references.map(reference => reference.price)).size > 1 ? `<p>${t('alternatePrices')}</p>` : ''}${variant.references.map(reference => `<a href="${reference.url}" target="_blank" rel="noopener">${t('retailerLink')} · ${money(reference.price)} ↗</a>`).join('')}<p>${t('retailDisclaimer')}</p></div>` : ''}<p class="detail-note">${t('detailNote')}</p><p class="detail-note">${t('usageNote')}</p></div></div>`;
+  byId('product-detail').innerHTML = `<div class="product-detail-layout"><div class="detail-art" style="--tint:${product.tint}">${productPhoto(product, variant.gallery[selectedPhoto] || variant.image, false, true)}${variant.gallery.length > 1 ? `<div class="detail-gallery" role="group" aria-label="${t('morePhotos')}">${variant.gallery.map((image, index) => `<button class="gallery-thumb ${index === selectedPhoto ? 'active' : ''}" data-photo="${index}" aria-pressed="${index === selectedPhoto}" aria-label="${t('morePhotos')} ${formatNumber(index + 1)}"><img src="${image}" alt="" width="540" height="1000"></button>`).join('')}</div>` : ''}</div><div class="detail-copy"><div class="eyebrow">${product.brand} · ${pick(categoryLabels[product.category])}</div><h2>${pick(product.name)}</h2><span class="label-caption">${t('labelCaption')}</span><p>${pick(product.description)}</p><span class="field-label">${t('size')}</span><p class="detail-size">${selectedSize === 'bottle' ? t('bottle') : formatVariant(product, selectedSize)}</p><p class="stock-pending">${stockText(variant)}</p>${productCode(variant)}<div class="detail-purchase"><span class="price">${money(variant.price)}${priceCaption(variant)}</span>${variant.price !== null && variant.inStock !== false ? quantityControls(selectedQuantity, 'detail', '', maxQty(variant)) : ''}</div>${variant.price !== null && variant.inStock === false ? `<button class="button primary full-width" disabled>${t('outOfStock')}</button>` : `<button class="button primary full-width" data-action="${variant.price === null ? 'product-quote' : 'detail-add'}">${t(variant.price === null ? 'contact' : 'addToCart')}${icon('plus')}</button>`}${variant.references.length ? `<div class="retailer-reference"><strong>${t('retailerSource')}</strong><span>${t('checkedOn')}</span>${new Set(variant.references.map(reference => reference.price)).size > 1 ? `<p>${t('alternatePrices')}</p>` : ''}${variant.references.map(reference => `<a href="${reference.url}" target="_blank" rel="noopener">${t('retailerLink')} · ${money(reference.price)} ↗</a>`).join('')}<p>${t('retailDisclaimer')}</p></div>` : ''}<p class="detail-note">${t('detailNote')}</p><p class="detail-note">${t('usageNote')}</p></div></div>`;
 }
 function cartTotal() { return cart.reduce((total, item) => total + Math.round(unitPrice(productById(item.id), item.size) * 1000) * item.quantity, 0) / 1000; }
 function renderCart() {
@@ -295,6 +302,8 @@ document.addEventListener('click', event => {
     else filter?.focus();
     return;
   }
+  if (data.variant) { const [id, size] = data.variant.split('|'); showProduct(id, size); return; }
+  if (data.addVariant) { const [id, size] = data.addVariant.split('|'); addToCart(id, size); return; }
   if (data.product) { showProduct(data.product); return; }
   if (data.add) { addToCart(data.add); return; }
   if (data.size) { selectedSize = data.size; selectedPhoto = 0; renderDetail(); byId('product-detail').querySelector(`[data-size="${selectedSize}"]`).focus(); return; }
