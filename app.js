@@ -165,14 +165,14 @@ function renderFilters() {
   byId('filters').setAttribute('aria-label', t('catalogLabel'));
 }
 // One card per product and size, only for sizes with their own photo (the others come back once photographed).
-// Categories in shop order, then plastic before glass, then catalog order and volume.
+// Categories in shop order, then plastic before glass, then catalog order, biggest size first.
 const categoryOrder = ['juice', 'syrup', 'aroma', 'colorant', 'water', 'vinegar'].filter(key => categoryLabels[key]).concat(Object.keys(categoryLabels).filter(key => !['juice', 'syrup', 'aroma', 'colorant', 'water', 'vinegar'].includes(key)));
 const materialOrder = ['plastique', 'verre'];
 const entryVolume = size => size === 'bottle' ? 0 : parseFloat(size) * (/\bL\b/.test(size) ? 1000 : 1);
 function catalogEntries() {
   const rank = (list, value) => list.includes(value) ? list.indexOf(value) : list.length;
   return products.flatMap((product, index) => product.variants.filter(variant => variant.image).map(variant => ({ product, variant, index })))
-    .sort((a, b) => rank(categoryOrder, a.product.category) - rank(categoryOrder, b.product.category) || rank(materialOrder, a.variant.material) - rank(materialOrder, b.variant.material) || a.index - b.index || entryVolume(a.variant.size) - entryVolume(b.variant.size));
+    .sort((a, b) => rank(categoryOrder, a.product.category) - rank(categoryOrder, b.product.category) || rank(materialOrder, a.variant.material) - rank(materialOrder, b.variant.material) || a.index - b.index || entryVolume(b.variant.size) - entryVolume(a.variant.size));
 }
 function renderProducts() {
   const query = byId('search').value.toLocaleLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
