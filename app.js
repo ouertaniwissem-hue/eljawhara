@@ -164,13 +164,14 @@ function renderFilters() {
   byId('filters').innerHTML = ['all', ...categoryOrder].map(key => `<button class="filter ${category === key ? 'active' : ''}" data-category="${key}" aria-pressed="${category === key}">${t(key)}<span class="filter-count">${formatNumber(catalogEntries().filter(entry => key === 'all' || entry.product.category === key).length)}</span></button>`).join('');
   byId('filters').setAttribute('aria-label', t('catalogLabel'));
 }
-// One card per product and size: categories in shop order, then plastic before glass, then catalog order and volume.
+// One card per product and size, only for sizes with their own photo (the others come back once photographed).
+// Categories in shop order, then plastic before glass, then catalog order and volume.
 const categoryOrder = ['juice', 'syrup', 'aroma', 'colorant', 'water', 'vinegar'].filter(key => categoryLabels[key]).concat(Object.keys(categoryLabels).filter(key => !['juice', 'syrup', 'aroma', 'colorant', 'water', 'vinegar'].includes(key)));
 const materialOrder = ['plastique', 'verre'];
 const entryVolume = size => size === 'bottle' ? 0 : parseFloat(size) * (/\bL\b/.test(size) ? 1000 : 1);
 function catalogEntries() {
   const rank = (list, value) => list.includes(value) ? list.indexOf(value) : list.length;
-  return products.flatMap((product, index) => product.variants.map(variant => ({ product, variant, index })))
+  return products.flatMap((product, index) => product.variants.filter(variant => variant.image).map(variant => ({ product, variant, index })))
     .sort((a, b) => rank(categoryOrder, a.product.category) - rank(categoryOrder, b.product.category) || rank(materialOrder, a.variant.material) - rank(materialOrder, b.variant.material) || a.index - b.index || entryVolume(a.variant.size) - entryVolume(b.variant.size));
 }
 function renderProducts() {
