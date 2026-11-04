@@ -184,6 +184,11 @@ for (const [productId, size, codes] of articleRows) {
   variant.codesToConfirm = list.some(code => code.endsWith('?'));
 }
 for (const product of products) {
+  // Perla flavourings and colourings are all 30 ml bottles (Miel, Banane, Cerise, Menthe had no size on their photo).
+  if (['aroma', 'colorant'].includes(product.category)) {
+    const unsized = product.variants.find(variant => variant.size === 'bottle');
+    if (unsized && !product.variants.some(variant => variant.size === '30 ml')) unsized.size = '30 ml';
+  }
   const bySize = (a, b) => sizeVolume(a.size) - sizeVolume(b.size) || packagingOrder.indexOf(sizePackaging(a.size)) - packagingOrder.indexOf(sizePackaging(b.size));
   if (pinnedFirst.has(product.id)) product.variants = [product.variants[0], ...product.variants.slice(1).sort(bySize)];
   else product.variants.sort(bySize);
