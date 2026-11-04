@@ -1,8 +1,10 @@
 // Manufacturer-supplied replacement photography. IDs and sizes stay unchanged.
 // Paths for difficult clear bottles are reviewed silhouettes in the 963 × 1280 source frame.
 const ownedPhotoRows = [
-  ['juice-citron-amande','3 L','El Jawhara - Jus Citron et amande - 3 L.jpeg'],
-  ['juice-cocktail','3 L','El Jawhara - Jus Cocktail de fruits - 3 L.jpeg'],
+  ['juice-citron-amande','3 L','El Jawhara - Jus Citron et amande - 3 L.png'],
+  ['juice-cocktail','3 L','El Jawhara - Jus Cocktail de fruits - 3 L.png'],
+  // Earlier filed as « Cocktail de fruits »; its label reads pulpe d'ananas et d'orange (بلب الأناناس والبرتقال).
+  ['juice-ananas-orange','3 L','El Jawhara - Jus Ananas et orange - 3 L.jpeg'],
   ['juice-mangue','1 L','El Jawhara - Jus Mangue - 1 L.jpeg'],
   ['juice-grenadine','1 L','El Jawhara - Jus Grenadine - 1 L.jpeg'],
   ['juice-ananas-orange','1 L','El Jawhara - Jus Ananas et orange - 1 L.jpeg'],
