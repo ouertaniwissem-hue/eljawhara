@@ -234,6 +234,11 @@ for (const product of products) {
   product.image = (product.variants.find(variant => variant.image) || {}).image || null;
 }
 // Additional angles of the same bottle: browsable in the detail view, not separate listings.
+// No prices for now (on request) until El Jawhara confirms its own price list; retailer prices are hidden too.
+for (const product of products) {
+  product.price = null;
+  for (const variant of product.variants) { variant.price = null; variant.references = []; }
+}
 for (const product of products) for (const variant of product.variants) {
   variant.gallery = variant.image ? [variant.image] : [];
   variant.codes = variant.codes || [];
