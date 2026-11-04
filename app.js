@@ -85,7 +85,7 @@ Object.assign(translations.fr, {
   total: 'Total indicatif', catalogNote: 'Prix et volumes issus des fiches Géant Drive quand disponibles. Stocks et tarifs fabricant à confirmer.',
   labelCaption: 'Description du produit', collectionDescription: 'Concentrés, arômes, colorants, sirops, eaux florales et vinaigres.<br> Tout un univers à explorer.',
   unknownPriceNotice: 'Le prix de ce produit reste à confirmer. Vous pouvez demander un devis.',
-  photoPending: 'Photo à venir', productCode: 'Réf.', vinegar: 'Vinaigres', morePhotos: 'Autres vues', photoOfSize: 'Photo : format {size}',
+  photoPending: 'Photo à venir', productCode: 'Réf.', vinegar: 'Vinaigres', morePhotos: 'Autres vues', zoomHint: 'Zoomer', photoOfSize: 'Photo : format {size}',
   heroAromas: 'Arômes & colorants', heroFamilies: 'Nos familles de produits', brandEJ: 'El Jawhara', brandPerla: 'Perla',
   reassure1: 'Livraison dans les 24 gouvernorats', reassure1Text: 'Partout en Tunisie, à domicile.',
   reassure2: 'Paiement à la livraison', reassure2Text: 'Réglez en espèces à la réception.',
@@ -108,7 +108,7 @@ Object.assign(translations.ar, {
   total: 'الإجمالي التقديري', catalogNote: 'الأسعار والأحجام من صفحات جيان درايف عند توفّرها. المخزون وأسعار المصنع بانتظار التأكيد.',
   labelCaption: 'وصف المنتج', collectionDescription: 'مركّزات ومنكّهات وملوّنات وشراب ومياه زهرية وخلّ.<br> عالم يستحق الاكتشاف.',
   unknownPriceNotice: 'سعر هذا المنتج بانتظار التأكيد. يمكنك طلب عرض أسعار.',
-  photoPending: 'الصورة قريباً', productCode: 'المرجع', vinegar: 'خلّ', morePhotos: 'صور أخرى', photoOfSize: 'الصورة: عبوة {size}',
+  photoPending: 'الصورة قريباً', productCode: 'المرجع', vinegar: 'خلّ', morePhotos: 'صور أخرى', zoomHint: 'تكبير', photoOfSize: 'الصورة: عبوة {size}',
   heroAromas: 'منكّهات وملوّنات', heroFamilies: 'عائلات منتجاتنا', brandEJ: 'الجوهرة', brandPerla: 'بيرلا',
   reassure1: 'التوصيل إلى ٢٤ ولاية', reassure1Text: 'إلى المنزل في كامل أنحاء تونس.',
   reassure2: 'الدفع عند الاستلام', reassure2Text: 'ادفع نقداً عند وصول طلبك.',
@@ -258,7 +258,7 @@ function renderDetail() {
   const product = selectedProduct;
   const variant = variantFor(product, selectedSize);
   byId('product-dialog').setAttribute('aria-label', `${product.brand} — ${pick(categoryLabels[product.category])} — ${pick(product.name)}`);
-  byId('product-detail').innerHTML = `<div class="product-detail-layout"><div class="detail-art" style="--tint:${product.tint}">${productPhoto(product, variant.gallery[selectedPhoto] || variant.image, false, true)}${variant.gallery.length > 1 ? `<div class="detail-gallery" role="group" aria-label="${t('morePhotos')}">${variant.gallery.map((image, index) => `<button class="gallery-thumb ${index === selectedPhoto ? 'active' : ''}" data-photo="${index}" aria-pressed="${index === selectedPhoto}" aria-label="${t('morePhotos')} ${formatNumber(index + 1)}"><img src="${image}" alt="" width="540" height="1000"></button>`).join('')}</div>` : ''}</div><div class="detail-copy"><div class="eyebrow">${product.brand} · ${pick(categoryLabels[product.category])}</div><h2>${pick(product.name)}</h2><span class="label-caption">${t('labelCaption')}</span><p>${pick(product.description)}</p><span class="field-label">${t('size')}</span><p class="detail-size">${selectedSize === 'bottle' ? t('bottle') : formatVariant(product, selectedSize)}</p><p class="stock-pending">${stockText(variant)}</p>${productCode(variant)}<div class="detail-purchase"><span class="price">${money(variant.price)}${priceCaption(variant)}</span>${variant.price !== null && variant.inStock !== false ? quantityControls(selectedQuantity, 'detail', '', maxQty(variant)) : ''}</div>${variant.price !== null && variant.inStock === false ? `<button class="button primary full-width" disabled>${t('outOfStock')}</button>` : `<button class="button primary full-width" data-action="${variant.price === null ? 'product-quote' : 'detail-add'}">${t(variant.price === null ? 'contact' : 'addToCart')}${icon('plus')}</button>`}${variant.references.length ? `<div class="retailer-reference"><strong>${t('retailerSource')}</strong><span>${t('checkedOn')}</span>${new Set(variant.references.map(reference => reference.price)).size > 1 ? `<p>${t('alternatePrices')}</p>` : ''}${variant.references.map(reference => `<a href="${reference.url}" target="_blank" rel="noopener">${t('retailerLink')} · ${money(reference.price)} ↗</a>`).join('')}<p>${t('retailDisclaimer')}</p></div>` : ''}<p class="detail-note">${t('detailNote')}</p><p class="detail-note">${t('usageNote')}</p></div></div>`;
+  byId('product-detail').innerHTML = `<div class="product-detail-layout"><div class="detail-art" style="--tint:${product.tint}">${(variant.gallery[selectedPhoto] || variant.image) ? `<div class="zoom-frame" data-zoom>${productPhoto(product, variant.gallery[selectedPhoto] || variant.image, false, true)}<button class="zoom-toggle" data-zoom-toggle aria-pressed="false" aria-label="${t('zoomHint')}">${icon('search')}<span>${t('zoomHint')}</span></button></div>` : productPhoto(product, variant.image, false, true)}${variant.gallery.length > 1 ? `<div class="detail-gallery" role="group" aria-label="${t('morePhotos')}">${variant.gallery.map((image, index) => `<button class="gallery-thumb ${index === selectedPhoto ? 'active' : ''}" data-photo="${index}" aria-pressed="${index === selectedPhoto}" aria-label="${t('morePhotos')} ${formatNumber(index + 1)}"><img src="${image}" alt="" width="540" height="1000"></button>`).join('')}</div>` : ''}</div><div class="detail-copy"><div class="eyebrow">${product.brand} · ${pick(categoryLabels[product.category])}</div><h2>${pick(product.name)}</h2><span class="label-caption">${t('labelCaption')}</span><p>${pick(product.description)}</p><span class="field-label">${t('size')}</span><p class="detail-size">${selectedSize === 'bottle' ? t('bottle') : formatVariant(product, selectedSize)}</p><p class="stock-pending">${stockText(variant)}</p>${productCode(variant)}<div class="detail-purchase"><span class="price">${money(variant.price)}${priceCaption(variant)}</span>${variant.price !== null && variant.inStock !== false ? quantityControls(selectedQuantity, 'detail', '', maxQty(variant)) : ''}</div>${variant.price !== null && variant.inStock === false ? `<button class="button primary full-width" disabled>${t('outOfStock')}</button>` : `<button class="button primary full-width" data-action="${variant.price === null ? 'product-quote' : 'detail-add'}">${t(variant.price === null ? 'contact' : 'addToCart')}${icon('plus')}</button>`}${variant.references.length ? `<div class="retailer-reference"><strong>${t('retailerSource')}</strong><span>${t('checkedOn')}</span>${new Set(variant.references.map(reference => reference.price)).size > 1 ? `<p>${t('alternatePrices')}</p>` : ''}${variant.references.map(reference => `<a href="${reference.url}" target="_blank" rel="noopener">${t('retailerLink')} · ${money(reference.price)} ↗</a>`).join('')}<p>${t('retailDisclaimer')}</p></div>` : ''}<p class="detail-note">${t('detailNote')}</p><p class="detail-note">${t('usageNote')}</p></div></div>`;
 }
 function cartTotal() { return cart.reduce((total, item) => total + Math.round(unitPrice(productById(item.id), item.size) * 1000) * item.quantity, 0) / 1000; }
 function renderCart() {
@@ -331,6 +331,59 @@ document.addEventListener('click', event => {
     case 'back-cart': closeDialog('form-dialog'); openDialog('cart-dialog'); break;
     case 'legal': toast(t('legalPending')); break;
   }
+});
+// Product photo zoom: click/tap (or the Zoom button) toggles 2.5×; move the mouse or drag a finger to look around.
+const zoomScale = 2.5;
+function setZoom(frame, on, x = 0.5, y = 0.5) {
+  frame.classList.toggle('zoomed', on);
+  frame.querySelector('[data-zoom-toggle]')?.setAttribute('aria-pressed', on);
+  moveZoom(frame, x, y);
+}
+function moveZoom(frame, x, y) {
+  frame.style.setProperty('--zx', `${Math.min(1, Math.max(0, x)) * 100}%`);
+  frame.style.setProperty('--zy', `${Math.min(1, Math.max(0, y)) * 100}%`);
+}
+function zoomPoint(frame, event) {
+  const rect = frame.getBoundingClientRect();
+  return [(event.clientX - rect.left) / rect.width, (event.clientY - rect.top) / rect.height];
+}
+let zoomDrag = null;
+byId('product-detail').addEventListener('click', event => {
+  const toggle = event.target.closest('[data-zoom-toggle]');
+  const frame = event.target.closest('[data-zoom]');
+  if (!frame) return;
+  if (toggle) { setZoom(frame, !frame.classList.contains('zoomed')); return; }
+  if (zoomDrag?.moved) return;
+  setZoom(frame, !frame.classList.contains('zoomed'), ...zoomPoint(frame, event));
+});
+byId('product-detail').addEventListener('pointerdown', event => {
+  const frame = event.target.closest('[data-zoom]');
+  if (!frame || event.target.closest('[data-zoom-toggle]') || !frame.classList.contains('zoomed') || event.pointerType === 'mouse') { zoomDrag = null; return; }
+  const style = getComputedStyle(frame);
+  zoomDrag = { frame, x: event.clientX, y: event.clientY, zx: parseFloat(style.getPropertyValue('--zx')) / 100 || 0.5, zy: parseFloat(style.getPropertyValue('--zy')) / 100 || 0.5, moved: false };
+  frame.setPointerCapture(event.pointerId);
+});
+byId('product-detail').addEventListener('pointermove', event => {
+  const frame = event.target.closest('[data-zoom]');
+  if (zoomDrag && zoomDrag.frame === frame) {
+    const rect = frame.getBoundingClientRect();
+    const dx = event.clientX - zoomDrag.x, dy = event.clientY - zoomDrag.y;
+    if (Math.abs(dx) + Math.abs(dy) > 6) zoomDrag.moved = true;
+    // Dragging pushes the photo, so the focus point moves the opposite way.
+    moveZoom(frame, zoomDrag.zx - dx / (rect.width * (zoomScale - 1)), zoomDrag.zy - dy / (rect.height * (zoomScale - 1)));
+    return;
+  }
+  if (frame?.classList.contains('zoomed') && event.pointerType === 'mouse') moveZoom(frame, ...zoomPoint(frame, event));
+});
+const endZoomDrag = () => setTimeout(() => { zoomDrag = null; }, 0);
+byId('product-detail').addEventListener('pointerup', endZoomDrag);
+byId('product-detail').addEventListener('pointercancel', endZoomDrag);
+byId('product-detail').addEventListener('pointerleave', event => {
+  if (event.pointerType === 'mouse' && event.target.matches?.('[data-zoom].zoomed')) setZoom(event.target, false);
+}, true);
+byId('product-dialog').addEventListener('keydown', event => {
+  const frame = byId('product-detail').querySelector('[data-zoom].zoomed');
+  if (event.key === 'Escape' && frame) { event.preventDefault(); setZoom(frame, false); }
 });
 byId('language').addEventListener('click', event => { const button = event.target.closest('[data-lang]'); if (button && button.dataset.lang !== language) setLanguage(button.dataset.lang); });
 byId('search').addEventListener('input', () => { visibleLimit = 12; renderProducts(); });

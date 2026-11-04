@@ -48,7 +48,7 @@ const englishText = {
   retailDisclaimer: 'Retailer’s public price, not guaranteed by the manufacturer. Selling price and availability still to be confirmed.',
   alternatePrices: 'Several Géant pages show different prices for this size:',
   unknownPriceNotice: 'The price of this product is still to be confirmed. You can request a quote.',
-  photoPending: 'Photo coming soon', productCode: 'Ref.', morePhotos: 'More views', photoOfSize: 'Photo: {size} size',
+  photoPending: 'Photo coming soon', productCode: 'Ref.', morePhotos: 'More views', zoomHint: 'Zoom', photoOfSize: 'Photo: {size} size',
   heroAromas: 'Flavourings & colourings', heroFamilies: 'Our product families', brandEJ: 'El Jawhara', brandPerla: 'Perla',
   reassure1: 'Delivery to all 24 governorates', reassure1Text: 'Everywhere in Tunisia, to your door.',
   reassure2: 'Cash on delivery', reassure2Text: 'Pay in cash when you receive it.',
