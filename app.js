@@ -92,7 +92,7 @@ Object.assign(translations.fr, {
   reassure3: 'Paiement sécurisé', reassure3Text: 'Carte bancaire ou e-DINAR.',
   reassure4: 'Tarifs professionnels', reassure4Text: 'Cafés, commerces, distributeurs.',
   footerContact: 'Contact', footerInfo: 'Informations', footerPayment: 'Moyens de paiement', footerFollow: 'Suivez-nous',
-  footerPhone: 'Téléphone / WhatsApp', footerAddress: 'Adresse à compléter', cgv: 'Conditions générales de vente', privacy: 'Politique de confidentialité',
+  footerPhone: 'Service client', footerEmail: 'E-mail', footerLocation: 'Localisation', footerAddress: 'Km 7 Ghdir El Golla, Tunis', cgv: 'Conditions générales de vente', privacy: 'Politique de confidentialité',
   deliveryInfo: 'Livraison & retours', legalPending: 'Cette page sera bientôt disponible.',
   payCashShort: 'Espèces à la livraison', payCardShort: 'Carte · e-DINAR', payTransferShort: 'Virement (pros)'
 });
@@ -115,7 +115,7 @@ Object.assign(translations.ar, {
   reassure3: 'دفع آمن', reassure3Text: 'بطاقة بنكية أو e-DINAR.',
   reassure4: 'أسعار للمهنيين', reassure4Text: 'للمقاهي والمتاجر والموزّعين.',
   footerContact: 'اتصل بنا', footerInfo: 'معلومات', footerPayment: 'طرق الدفع', footerFollow: 'تابعونا',
-  footerPhone: 'الهاتف / واتساب', footerAddress: 'العنوان (يُضاف لاحقاً)', cgv: 'الشروط العامة للبيع', privacy: 'سياسة الخصوصية',
+  footerPhone: 'خدمة العملاء', footerEmail: 'البريد الإلكتروني', footerLocation: 'العنوان', footerAddress: 'كلم 7 غدير القلّة، تونس', cgv: 'الشروط العامة للبيع', privacy: 'سياسة الخصوصية',
   deliveryInfo: 'التوصيل والإرجاع', legalPending: 'ستتوفّر هذه الصفحة قريباً.',
   payCashShort: 'نقداً عند الاستلام', payCardShort: 'بطاقة · e-DINAR', payTransferShort: 'تحويل بنكي (للمهنيين)'
 });

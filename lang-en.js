@@ -55,7 +55,7 @@ const englishText = {
   reassure3: 'Secure payment', reassure3Text: 'Bank card or e-DINAR.',
   reassure4: 'Business prices', reassure4Text: 'Cafés, shops, distributors.',
   footerContact: 'Contact', footerInfo: 'Information', footerPayment: 'Payment methods', footerFollow: 'Follow us',
-  footerPhone: 'Phone / WhatsApp', footerAddress: 'Address coming soon', cgv: 'Terms and conditions of sale', privacy: 'Privacy policy',
+  footerPhone: 'Customer service', footerEmail: 'E-mail', footerLocation: 'Location', footerAddress: 'Km 7 Ghdir El Golla, Tunis', cgv: 'Terms and conditions of sale', privacy: 'Privacy policy',
   deliveryInfo: 'Delivery & returns', legalPending: 'This page will be available soon.',
   payCashShort: 'Cash on delivery', payCardShort: 'Card · e-DINAR', payTransferShort: 'Bank transfer (business)',
   // Live store (store.js)
