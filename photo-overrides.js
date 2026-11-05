@@ -13,7 +13,7 @@ const ownedPhotoRows = [
   ['juice-fraise','1 L','El Jawhara - Jus Fraise - 1 L.jpeg'],
   ['juice-fraise','3 L','El Jawhara - Jus Fraise - 3 L.jpeg'],
   // 5 L formats are read from the labels; no retailer price exists, so they open the quote flow.
-  ['juice-fraise','5 L','El Jawhara - Jus Fraise - 5 L.jpeg'],
+  ['juice-fraise','5 L','El Jawhara - Jus Fraise - 5 L.png'],
   ['juice-menthe','5 L','El Jawhara - Jus Menthe - 5 L.jpeg'],
   ['juice-orgeat','5 L','El Jawhara - Jus Orgeat - 5 L.jpeg'],
   ['juice-orange','5 L','El Jawhara - Jus Orange - 5 L.jpeg'],
