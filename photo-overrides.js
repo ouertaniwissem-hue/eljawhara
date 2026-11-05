@@ -64,12 +64,21 @@ const ownedPhotoRows = [
   ['vinegar-clair','220 ml ronde','El Jawhara - Vinaigre dilué clair - 220 ml ronde.jpeg'],
   ['juice-citron','5 L','El Jawhara - Jus Citron - 5 L.jpeg'],
   ['vinegar-colore','1 L','El Jawhara - Vinaigre coloré - 1 L.jpeg'],
-  ['vinegar-cristal','1 L','El Jawhara - Vinaigre cristal - 1 L.jpeg']
+  ['vinegar-cristal','1 L','El Jawhara - Vinaigre cristal - 1 L.jpeg'],
+  // Plastic 1 L bottles and Grenadine 5 L (photos of 5 Nov 2026).
+  ['juice-grenadine','5 L','El Jawhara - Jus Grenadine - 5 L.jpeg'],
+  ['juice-orgeat','1 L plastique','El Jawhara - Jus Orgeat - 1 L plastique.jpeg'],
+  ['juice-poire','1 L','El Jawhara - Jus Poire - 1 L.jpeg'],
+  ['juice-orange','1 L','El Jawhara - Jus Orange - 1 L.jpeg'],
+  ['juice-pistache','1 L plastique','El Jawhara - Jus Pistache - 1 L plastique.jpeg'],
+  ['juice-cocktail','1 L','El Jawhara - Jus Cocktail de fruits - 1 L.jpeg'],
+  ['juice-menthe','1 L plastique','El Jawhara - Jus Menthe - 1 L plastique.jpeg']
 ];
 // Extra views of the same product and size: shown as a gallery, never as extra listings.
 const galleryPhotoRows = [
   ['juice-citron','1 L','El Jawhara - Jus Citron - 1 L - vue 2.jpeg'],
   ['juice-ananas','1 L','El Jawhara - Jus Ananas - 1 L - vue 2.jpeg'],
+  ['juice-ananas-orange','1 L','El Jawhara - Jus Ananas et orange - 1 L - vue 2.jpeg'],
   ['water-rose','220 ml droite','El Jawhara - Eau de rose - 220 ml droite - vue 2.jpeg'],
   ['water-fleur-oranger','220 ml',"El Jawhara - Eau de fleur d'oranger - 220 ml - vue 2.jpeg"]
 ];
