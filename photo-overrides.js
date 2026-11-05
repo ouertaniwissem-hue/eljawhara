@@ -72,13 +72,13 @@ const ownedPhotoRows = [
   ['juice-orange','1 L','El Jawhara - Jus Orange - 1 L.jpeg'],
   ['juice-pistache','1 L plastique','El Jawhara - Jus Pistache - 1 L plastique.jpeg'],
   ['juice-cocktail','1 L','El Jawhara - Jus Cocktail de fruits - 1 L.jpeg'],
-  ['juice-menthe','1 L plastique','El Jawhara - Jus Menthe - 1 L plastique.jpeg']
+  ['juice-menthe','1 L plastique','El Jawhara - Jus Menthe - 1 L plastique.jpeg'],
+  // Label « بنكهة الاناناس »: pineapple only, earlier filed as Ananas & orange 1 L.
+  ['juice-ananas','1 L plastique','El Jawhara - Jus Ananas - 1 L plastique.jpeg']
 ];
 // Extra views of the same product and size: shown as a gallery, never as extra listings.
 const galleryPhotoRows = [
   ['juice-citron','1 L','El Jawhara - Jus Citron - 1 L - vue 2.jpeg'],
-  ['juice-ananas','1 L','El Jawhara - Jus Ananas - 1 L - vue 2.jpeg'],
-  ['juice-ananas-orange','1 L','El Jawhara - Jus Ananas et orange - 1 L - vue 2.jpeg'],
   ['water-rose','220 ml droite','El Jawhara - Eau de rose - 220 ml droite - vue 2.jpeg'],
   ['water-fleur-oranger','220 ml',"El Jawhara - Eau de fleur d'oranger - 220 ml - vue 2.jpeg"]
 ];
