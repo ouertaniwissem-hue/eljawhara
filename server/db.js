@@ -59,7 +59,7 @@ const zones = [
 
 const defaultSettings = {
   company_name: 'Société El Jawhara', company_address: 'Km 7 Ghdir El Golla, Tunis', company_tax_id: '[Matricule fiscal à compléter]',
-  company_phone: '24 231 155', company_email: 'eljawhara.jus@gmail.com', bank_details: '[RIB à compléter]',
+  company_phone: '+216 24 231 155', company_email: 'eljawhara.jus@gmail.com', bank_details: '[RIB à compléter]',
   vat_rate: '19', stamp_duty: '0', free_delivery_from: '0', min_order: '0', business_min_order: '0',
   cod_enabled: '1', card_enabled: '1', transfer_enabled: '1', staff_email: '', staff_phone: '',
   // 1 = Géant reference prices can be sold until El Jawhara confirms its own price list. Set to 0 before launch.
