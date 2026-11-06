@@ -74,7 +74,9 @@ const ownedPhotoRows = [
   ['juice-cocktail','1 L','El Jawhara - Jus Cocktail de fruits - 1 L.jpeg'],
   ['juice-menthe','1 L plastique','El Jawhara - Jus Menthe - 1 L plastique.jpeg'],
   // Label « بنكهة الاناناس »: pineapple only, earlier filed as Ananas & orange 1 L.
-  ['juice-ananas','1 L plastique','El Jawhara - Jus Ananas - 1 L plastique.jpeg']
+  ['juice-ananas','1 L plastique','El Jawhara - Jus Ananas - 1 L plastique.jpeg'],
+  // Transparent cut-out supplied by El Jawhara (6 Nov 2026), label « حامض خلي مخفف كريستال ».
+  ['vinegar-cristal','5 L','El Jawhara - Vinaigre cristal - 5 L.png']
 ];
 // Extra views of the same product and size: shown as a gallery, never as extra listings.
 const galleryPhotoRows = [

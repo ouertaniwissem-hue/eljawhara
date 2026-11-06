@@ -1,5 +1,5 @@
 ﻿// Installable app: the storefront and product photos work offline; API calls (prices, stock, orders) always go to the network.
-const VERSION = 'ej-v46';
+const VERSION = 'ej-v47';
 const SHELL = ['/', '/styles.css', '/brand.css', '/cutouts.css', '/photography.css', '/store.css', '/retailer-data.js', '/photo-overrides.js', '/catalog.js', '/lang-en.js', '/app.js', '/store.js', '/assets/logo.png', '/assets/logo-perla.png', '/assets/favicon.png', '/manifest.webmanifest'];
 
 self.addEventListener('install', event => {
